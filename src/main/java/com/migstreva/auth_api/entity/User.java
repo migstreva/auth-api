@@ -6,6 +6,7 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -29,7 +30,7 @@ public class User {
     private String password;
 
     @Column(name = "date_of_birth", nullable = false)
-    private LocalDateTime dob;
+    private LocalDate dob;
 
     @Column(length = 20, nullable = false)
     @Enumerated(EnumType.STRING)
