@@ -25,8 +25,11 @@ public class User {
     @Column(length = 150, nullable = false, unique = true)
     private String email;
 
-    @Column(nullable = false)
+    @Column(length = 255, nullable = false)
     private String password;
+
+    @Column(name = "date_of_birth", nullable = false)
+    private LocalDateTime dob;
 
     @Column(length = 20, nullable = false)
     @Enumerated(EnumType.STRING)
