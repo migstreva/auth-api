@@ -38,7 +38,7 @@ public class UserService {
         Optional<User> userOptional = repository.findByUsername(username);
 
         if (userOptional.isEmpty()) {
-            throw new UserNotFoundException("User not found");
+            throw new UserNotFoundException("Could not find user to delete");
         }
 
         repository.delete(userOptional.get());

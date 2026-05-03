@@ -35,26 +35,11 @@ public class JwtService {
         return new TokenResponse(token, "Bearer", expiresIn);
     }
 
-    private Claims extractAllClaims(String token) {
+    public Claims parseToken(String token) {
         return Jwts.parser()
                 .verifyWith(getKey())
                 .build()
                 .parseSignedClaims(token)
                 .getPayload();
-    }
-
-    public String extractSubject(String token) {
-        return extractAllClaims(token).getSubject();
-    }
-
-    private boolean isTokenExpired(String token) {
-        return extractAllClaims(token)
-                .getExpiration()
-                .before(new Date());
-    }
-
-    public boolean isTokenValid(String token, String subject) {
-        final String extractedSubject = extractSubject(token);
-        return extractedSubject.equals(subject) && !isTokenExpired(token);
     }
 }

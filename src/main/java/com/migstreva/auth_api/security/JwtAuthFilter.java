@@ -1,16 +1,18 @@
 package com.migstreva.auth_api.security;
 
 import com.migstreva.auth_api.service.JwtService;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -37,13 +39,13 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             return;
         }
 
-        String token = authHeader.substring("Bearer ".length());
-        String subject = jwtService.extractSubject(token);
+        try {
+            String token = authHeader.substring("Bearer ".length());
+            Claims claims = jwtService.parseToken(token);
+            String subject = claims.getSubject();
 
-        if (jwtService.isTokenValid(token, subject)
-                && SecurityContextHolder.getContext().getAuthentication() == null) {
-
-            try {
+            if (subject != null &&
+                    SecurityContextHolder.getContext().getAuthentication() == null) {
                 UserDetails userDetails = userDetailsService.loadUserByUsername(subject);
 
                 var authToken = new UsernamePasswordAuthenticationToken(
@@ -53,10 +55,10 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                 );
 
                 SecurityContextHolder.getContext().setAuthentication(authToken);
-
-            } catch (UsernameNotFoundException e) {
-                SecurityContextHolder.clearContext();
             }
+
+        } catch (JwtException e) {
+            SecurityContextHolder.clearContext();
         }
 
         filterChain.doFilter(request, response);
