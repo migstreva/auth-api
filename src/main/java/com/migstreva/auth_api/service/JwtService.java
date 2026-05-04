@@ -4,6 +4,7 @@ import com.migstreva.auth_api.dto.TokenResponseDTO;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
@@ -12,7 +13,8 @@ import java.util.Date;
 @Service
 public class JwtService {
 
-    private final String SECRET = "segredinho_segredinho_segredinho";
+    @Value("${jwt.secret}")
+    private String SECRET;
 
     private SecretKey getKey() {
         return Keys.hmacShaKeyFor(SECRET.getBytes());
