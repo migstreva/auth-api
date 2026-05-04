@@ -1,9 +1,7 @@
 package com.migstreva.auth_api.controller;
 
-import com.migstreva.auth_api.dto.LoginRequest;
-import com.migstreva.auth_api.dto.TokenResponse;
-import com.migstreva.auth_api.entity.User;
-import com.migstreva.auth_api.exception.InvalidCredentialsException;
+import com.migstreva.auth_api.dto.LoginRequestDTO;
+import com.migstreva.auth_api.dto.TokenResponseDTO;
 import com.migstreva.auth_api.service.JwtService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -25,7 +23,7 @@ public class AuthController {
     private final JwtService jwtService;
 
     @PostMapping("/login")
-    public ResponseEntity<TokenResponse> login(@RequestBody LoginRequest request){
+    public ResponseEntity<TokenResponseDTO> login(@RequestBody LoginRequestDTO request){
 
         Authentication auth = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
@@ -35,7 +33,7 @@ public class AuthController {
         );
 
         String username = ((UserDetails) auth.getPrincipal()).getUsername();
-        TokenResponse token = jwtService.generateToken(username);
+        TokenResponseDTO token = jwtService.generateToken(username);
 
         return ResponseEntity.ok(token);
     }

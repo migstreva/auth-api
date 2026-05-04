@@ -1,8 +1,7 @@
 package com.migstreva.auth_api.controller.common;
 
-import com.migstreva.auth_api.dto.ErrorResponse;
+import com.migstreva.auth_api.dto.ErrorResponseDTO;
 import com.migstreva.auth_api.dto.FieldErrorDTO;
-import com.migstreva.auth_api.exception.InvalidCredentialsException;
 import com.migstreva.auth_api.exception.UserAlreadyExistsException;
 import com.migstreva.auth_api.exception.UserNotFoundException;
 import org.springframework.http.HttpStatus;
@@ -21,13 +20,13 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.UNPROCESSABLE_CONTENT)
-    public ErrorResponse handleMethodArgumentNotValidException(MethodArgumentNotValidException e){
+    public ErrorResponseDTO handleMethodArgumentNotValidException(MethodArgumentNotValidException e){
         List<FieldError> fieldErrors = e.getFieldErrors();
         List<FieldErrorDTO> errorsList = fieldErrors
                 .stream()
                 .map(fe -> new FieldErrorDTO(fe.getField(), fe.getDefaultMessage()))
                 .collect(Collectors.toList());
-        return new ErrorResponse(
+        return new ErrorResponseDTO(
                 HttpStatus.UNPROCESSABLE_CONTENT.value(),
                 "Validation error.",
                 errorsList);
@@ -35,26 +34,26 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(UserAlreadyExistsException.class)
     @ResponseStatus(HttpStatus.CONFLICT)
-    public ErrorResponse handleUserAlreadyExistsException(UserAlreadyExistsException e){
-        return ErrorResponse.conflict(e.getMessage());
+    public ErrorResponseDTO handleUserAlreadyExistsException(UserAlreadyExistsException e){
+        return ErrorResponseDTO.conflict(e.getMessage());
     }
 
     @ExceptionHandler(UserNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ErrorResponse handleUserNotFoundException(UserNotFoundException e){
-        return ErrorResponse.notFound(e.getMessage());
+    public ErrorResponseDTO handleUserNotFoundException(UserNotFoundException e){
+        return ErrorResponseDTO.notFound(e.getMessage());
     }
 
     @ExceptionHandler(BadCredentialsException.class)
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
-    public ErrorResponse handleBadCredentialsException(BadCredentialsException e){
-        return ErrorResponse.unauthorized(e.getMessage());
+    public ErrorResponseDTO handleBadCredentialsException(BadCredentialsException e){
+        return ErrorResponseDTO.unauthorized(e.getMessage());
     }
 
     @ExceptionHandler(AuthorizationDeniedException.class)
     @ResponseStatus(HttpStatus.FORBIDDEN)
-    public ErrorResponse authorizationDeniedException(AuthorizationDeniedException e){
-        return ErrorResponse.forbidden(e.getMessage());
+    public ErrorResponseDTO authorizationDeniedException(AuthorizationDeniedException e){
+        return ErrorResponseDTO.forbidden(e.getMessage());
     }
 
 //    @ExceptionHandler(RuntimeException.class)

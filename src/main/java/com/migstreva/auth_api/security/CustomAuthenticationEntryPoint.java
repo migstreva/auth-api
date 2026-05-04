@@ -1,7 +1,7 @@
 package com.migstreva.auth_api.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.migstreva.auth_api.dto.ErrorResponse;
+import com.migstreva.auth_api.dto.ErrorResponseDTO;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.core.AuthenticationException;
@@ -25,7 +25,7 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         response.setContentType("application/json");
 
-        ErrorResponse error = ErrorResponse.unauthorized("Authentication required.");
+        ErrorResponseDTO error = ErrorResponseDTO.unauthorized("Authentication required.");
         response.getWriter().write(objectMapper.writeValueAsString(error));
     }
 }

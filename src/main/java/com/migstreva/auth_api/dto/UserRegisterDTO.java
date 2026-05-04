@@ -5,7 +5,7 @@ import jakarta.validation.constraints.*;
 
 import java.time.LocalDate;
 
-public record UserRegister(
+public record UserRegisterDTO(
         @NotBlank(message = "Mandatory field")
         @Size(min = 2, max = 100, message = "Must be between {min} and {max} characters long")
         String username,
