@@ -3,6 +3,7 @@ package com.migstreva.auth_api.controller;
 import com.migstreva.auth_api.dto.LoginRequestDTO;
 import com.migstreva.auth_api.dto.TokenResponseDTO;
 import com.migstreva.auth_api.service.JwtService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -23,7 +24,7 @@ public class AuthController {
     private final JwtService jwtService;
 
     @PostMapping("/login")
-    public ResponseEntity<TokenResponseDTO> login(@RequestBody LoginRequestDTO request){
+    public ResponseEntity<TokenResponseDTO> login(@RequestBody @Valid LoginRequestDTO request){
 
         Authentication auth = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(

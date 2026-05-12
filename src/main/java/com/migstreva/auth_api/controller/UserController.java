@@ -23,7 +23,7 @@ public class UserController implements GenericController{
     private final UserMapper mapper;
 
     @PostMapping
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN')")
     public ResponseEntity<Void> save(@RequestBody @Valid UserRegisterDTO dto) {
         User user = mapper.toEntity(dto);
         service.save(user);
@@ -40,7 +40,7 @@ public class UserController implements GenericController{
 
     @DeleteMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN')")
     public void delete(@RequestParam String username ) {
         service.deleteByUsername(username);
     }
