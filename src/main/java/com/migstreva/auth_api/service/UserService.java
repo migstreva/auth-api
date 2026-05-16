@@ -17,13 +17,17 @@ public class UserService {
 
     private final UserRepository repository;
     private final PasswordEncoder encoder;
+    private final SqsService sqsService;
 
     public User save(User user) {
         if (repository.existsByUsernameOrEmail(user.getUsername(), user.getEmail())){
             throw new UserAlreadyExistsException("Username or email already in use");
         }
         user.setPassword(encoder.encode(user.getPassword()));
-        return repository.save(user);
+        User saved = repository.save(user);
+        sqsService.publishUserCreated(saved.getUsername(), saved.getEmail());
+
+        return saved;
     }
 
     public Optional<User> findByUsernameOrEmail(String usernameOrEmail) {
